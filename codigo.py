@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sympy import Range
-np.random.seed(42)
+np.random.seed(2)
 
 
 # Definimos parametros para el MC
@@ -72,36 +71,37 @@ while k <= 99:
 
 print('P_gross :', P_gross)
 print('--------------------------------------------------------------------')
-'''
-P = np.zeros(3)
-for i in range(0, 3):
+
+P = np.zeros(len(T_cycle))
+for i in range(len(P)):
     P[i] = M_i*24*0.007*0.81*T_cycle[i]*omega
     i += 1
 print('P_j :', P)
+print('--------------------------------------------------------------------')
 
 P_total = np.sum(P)
 print('P_total :', P_total)
+print('--------------------------------------------------------------------')
 
 w = P/P_total
 print('w :', w)
+print('--------------------------------------------------------------------')
 
-T_cyc = np.zeros(3)
-for i in range(0, 3):
-    T_cyc[i] = rho_avg/rho[i]*T_avg
-    i += 1
-print('T_cyc :', T_cyc)
 
-T_eff = sum(w*T_cyc)
+print('T_cycle :', T_cycle)
+print('--------------------------------------------------------------------')
 
+T_eff = sum(w*T_cycle)
 print('T_eff :', T_eff)
+print('--------------------------------------------------------------------')
 
 # General
-Promedio = sum(T_cyc)/3
+Promedio = sum(T_cycle)/len(T_cycle)
 print('Promedio: ', Promedio)
 Desviacion = 0
-for k in range(len(T_cyc)):
-    Desviacion = Desviacion + (Promedio - T_cyc[k])**2
-Desviacion = np.sqrt(Desviacion/3)
+for i in range(len(T_cycle)):
+    Desviacion = Desviacion + (Promedio - T_cycle[i])**2
+Desviacion = np.sqrt(Desviacion/len(T_cycle))
 print('Desviacion: ', Desviacion)
 
 dias = np.random.normal(T_eff, Desviacion, 1_000)
@@ -109,22 +109,22 @@ dias = np.random.normal(T_eff, Desviacion, 1_000)
 plt.figure(1)
 plt.clf()
 
-plt.hist(dias, bins=np.arange(315, 345, 0.5), density=True)
+plt.hist(dias, bins=np.arange(90, 120, 0.5), density=True)
 
 plt.xlabel('dias optimos para el reemplazo')
 plt.ylabel('Frecuencia')
 
 plt.legend()
 plt.show()
+print('--------------------------------------------------------------------')
 
-
-# Mina A
-Promedio = 330
+# Mineral 37
+Promedio = T_cycle[36]
 print('Promedio: ', Promedio)
 Desviacion = 0
-for k in range(len(T_cyc)):
-    Desviacion = Desviacion + (Promedio - T_cyc[k])**2
-Desviacion = np.sqrt(Desviacion/3)
+for k in range(len(T_cycle)):
+    Desviacion = Desviacion + (Promedio - T_cycle[k])**2
+Desviacion = np.sqrt(Desviacion/len(T_cycle))
 print('Desviacion: ', Desviacion)
 
 dias = np.random.normal(Promedio, Desviacion, 1_000)
@@ -132,16 +132,16 @@ dias = np.random.normal(Promedio, Desviacion, 1_000)
 plt.figure(2)
 plt.clf()
 
-plt.hist(dias, bins=np.arange(320, 340, 0.5), density=True)
+plt.hist(dias, bins=np.arange(90, 120, 1), density=True)
 
-plt.xlabel('dias optimos para el reemplazo mina A')
+plt.xlabel('Dias optimos para el reemplazo con mineral 37')
 plt.ylabel('Frecuencia')
 
 plt.legend()
 plt.show()
 
-
-# Mina B
+'''
+# Mineral B
 Promedio = 308
 print('Promedio: ', Promedio)
 Desviacion = 0
@@ -164,7 +164,7 @@ plt.legend()
 plt.show()
 
 
-# Mina C
+# Mineral C
 Promedio = 334
 print('Promedio: ', Promedio)
 Desviacion = 0
