@@ -5,7 +5,7 @@ np.random.seed(2)
 
 # Definimos parametros para el MC
 M_i = 6000  # Tones/hora
-E_i = 24*np.sort(np.random.rand(4*30)*745.7*400*6)  # kWh
+E_i = 24*np.sort(np.random.rand(4*30-1)*745.7*400*6+745.7*400*6)  # kWh
 T_avg = 3.5*30  # Dias (promedio entre 3 y 4 meses)
 T_cycle = np.sort(np.random.randint(3*30, 4*30, 100))  # Arreglo lineal entre 3 y 4 meses
 
@@ -109,9 +109,9 @@ dias = np.random.normal(T_eff, Desviacion, 1_000)
 plt.figure(1)
 plt.clf()
 
-plt.hist(dias, bins=np.arange(90, 120, 0.5), density=True)
+plt.hist(dias, bins=np.arange(80, 130, 0.5), density=True)
 
-plt.xlabel('dias optimos para el reemplazo')
+plt.xlabel('Dias optimos para el reemplazo')
 plt.ylabel('Frecuencia')
 
 plt.legend()
@@ -132,12 +132,31 @@ dias = np.random.normal(Promedio, Desviacion, 1_000)
 plt.figure(2)
 plt.clf()
 
-plt.hist(dias, bins=np.arange(90, 120, 1), density=True)
+plt.hist(dias, bins=np.arange(75, 135, 1), density=True)
 
-plt.xlabel('Dias optimos para el reemplazo con mineral 37')
+plt.xlabel('Dias optimos para el reemplazo con muestra aletoria del mineral')
 plt.ylabel('Frecuencia')
 
 plt.legend()
+plt.show()
+
+eta_prom = np.zeros(4*30-1)
+for i in range(len(eta_prom)):
+    eta_prom[i] = np.mean(eta[:, i])
+
+# Grafico eficiencia vs consumo
+xx = np.linspace(0, 119, 4*30-1)
+
+plt.clf()
+fig, ax = plt.subplots()
+ax.plot(xx, E_i, 'r', label='Consumo')
+plt.legend(loc=2)
+ax.set_xlabel('Dias')
+ax.set_ylabel('Consumo [kWh]')
+ax2 = ax.twinx()
+ax2.plot(xx, eta_prom, 'b', label='Eficiencia')
+ax2.set_ylabel('Eficiencia recuperacion de mineral [Ton]')
+plt.legend(loc=1)
 plt.show()
 
 '''
