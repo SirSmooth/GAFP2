@@ -5,13 +5,36 @@ np.random.seed(42)
 
 
 # Definimos parametros para el MC
-M_i = 111111111111  # Tones/hora
+M_i = 6000  # Tones/hora
 E_i = 24*np.sort(np.random.rand(100)*11111111111)  # kWh
 eta1 = np.linspace(0.83, 0.79, 330)*0.007 # Porcentaje de recuperacion mineral
 eta2 = np.linspace(0.71, 0.67, 308)*0.007 # Porcentaje de recuperacion mineral
 eta3 = np.linspace(0.84, 0.8, 334)*0.007 # Porcentaje de recuperacion mineral
 T_avg = 3.5*30  # Dias (promedio entre 3 y 4 meses)
-T_cycle = np.sort(3*30 + np.random.rand(100)*30)  # Arreglo lineal entre 3 y 4 meses
+T_cycle = np.sort(np.random.randint(3*30, 4*30, 100))  # Arreglo lineal entre 3 y 4 meses
+
+# Eta (Porcentaje de recuperacion mineral)
+ley = 0.007
+r_i = np.sort(np.random.normal(0.8, 0.01, len(T_cycle))) # Recuperacion inicial de material por eficiencia de la maquina
+r_f = np.sort(np.random.normal(0.7, 0.01, len(T_cycle)))  # Recuperacion final de material por eficiencia de la maquina
+eta = np.zeros(((T_cycle[len(T_cycle)-1]), (len(T_cycle))))
+
+
+k = 0
+for i in range(len(T_cycle)*(T_cycle[len(T_cycle)-1])):
+    if i < T_cycle[len(T_cycle)-1] + T_cycle[len(T_cycle)-1]*k:
+        if k == 0:
+            xrx = np.linspace(r_i[k], r_f[k], T_cycle[len(T_cycle)-1])*ley  # Usamos el dato maximo para la iteracion
+            eta[i, k] = xrx[i]
+        else:
+            xrx = np.linspace(r_i[k], r_f[k], T_cycle[len(T_cycle)-1])*ley  # Usamos el dato maximo para la iteracion
+            eta[i-T_cycle[len(T_cycle)-1]*k-1, k] = xrx[i-T_cycle[len(T_cycle)-1]*k-1]
+    else:
+
+        k += 1
+
+print(eta)
+'''
 T_rep = 3  # Dias
 C_energy = 0.183  # $/kWh
 omega = 10000  # $/tone
@@ -23,7 +46,7 @@ rho = np.array(np.random.normal(8.95, 0.2, 3))  # Densidad g/cm³
 # Calculados
 rho_avg = np.average(rho)  # g/cm³
 print('rho_avg: ', rho_avg)
-'''
+
 N = np.zeros(3)
 for k in range(0, len(T_cycle)):
     N[k] = (T_cycle[k] + T_rep)/(T_avg + T_rep)
