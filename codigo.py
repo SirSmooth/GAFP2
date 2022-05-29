@@ -17,7 +17,7 @@ T_cycle = np.sort(np.random.randint(3*30, 4*30, 100))  # Arreglo lineal entre 3 
 ley = 0.007
 r_i = np.sort(np.random.normal(0.8, 0.01, len(T_cycle))) # Recuperacion inicial de material por eficiencia de la maquina
 r_f = np.sort(np.random.normal(0.7, 0.01, len(T_cycle)))  # Recuperacion final de material por eficiencia de la maquina
-eta = np.zeros(((T_cycle[len(T_cycle)-1]), (len(T_cycle))))
+eta = np.zeros(((len(T_cycle), (T_cycle[len(T_cycle)-1]))))
 
 
 k = 0
@@ -25,15 +25,16 @@ for i in range(len(T_cycle)*(T_cycle[len(T_cycle)-1])):
     if i < T_cycle[len(T_cycle)-1] + T_cycle[len(T_cycle)-1]*k:
         if k == 0:
             xrx = np.linspace(r_i[k], r_f[k], T_cycle[len(T_cycle)-1])*ley  # Usamos el dato maximo para la iteracion
-            eta[i, k] = xrx[i]
+            eta[k, i] = xrx[i]
         else:
             xrx = np.linspace(r_i[k], r_f[k], T_cycle[len(T_cycle)-1])*ley  # Usamos el dato maximo para la iteracion
-            eta[i-T_cycle[len(T_cycle)-1]*k-1, k] = xrx[i-T_cycle[len(T_cycle)-1]*k-1]
+            eta[k, i-T_cycle[len(T_cycle)-1]*k-1] = xrx[i-T_cycle[len(T_cycle)-1]*k-1]
     else:
-
         k += 1
+        xrx = np.linspace(r_i[k], r_f[k], T_cycle[len(T_cycle)-1])*ley  # Usamos el dato maximo para la iteracion
+        eta[k, i-T_cycle[len(T_cycle)-1]*k-1] = xrx[i-T_cycle[len(T_cycle)-1]*k-1]
+        
 
-print(eta)
 '''
 T_rep = 3  # Dias
 C_energy = 0.183  # $/kWh
